@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import TourPackage, PhotoAlbum, BlogPost
+from .models import TourPackage, PhotoAlbum, BlogPost, Contact, Booking
 from .forms import ContactForm, BookingForm, BlogPostForm, TourPackageForm
 
 def homepage_view(request):
@@ -72,4 +72,3 @@ def blog_post_detail_view(request, slug):
 def tour_package_detail_view(request, slug):
     package = get_object_or_404(TourPackage, slug=slug)
     return render(request, 'across/tour_package_detail.html', {'package': package})
-
