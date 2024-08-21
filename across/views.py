@@ -1,16 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import TourPackage, PhotoAlbum, BlogPost, Contact, Booking
+from .models import TourPackage, PhotoAlbum, BlogPost, HomePageBanner
 from .forms import ContactForm, BookingForm, BlogPostForm, TourPackageForm
 
 def homepage_view(request):
     packages = TourPackage.objects.all()
     albums = PhotoAlbum.objects.all()
     blog_posts = BlogPost.objects.all()
+    homepage_banner = HomePageBanner.objects.first()  # Assuming a single banner
+
     return render(request, 'across/homepage.html', {
         'packages': packages,
         'albums': albums,
         'blog_posts': blog_posts,
+        'homepage_banner': homepage_banner,
     })
 
 def blog_post_create_view(request):

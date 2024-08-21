@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block body %}
+<!-- Banner Carousel -->
+{% if homepage_banner %}
+<div id="homepageBannerCarousel" class="carousel slide" data-bs-ride="carousel">
+    <!-- Carousel Indicators -->
+    <ol class="carousel-indicators">
+        {% for image in homepage_banner.images.all %}
+        <li data-bs-target="#homepageBannerCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+        {% endfor %}
+    </ol>
+    <!-- Carousel Inner -->
+    <div class="carousel-inner">
+        {% for image in homepage_banner.images.all %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.alt_text }}">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>{{ homepage_banner.text|safe }}</h5>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#homepageBannerCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#homepageBannerCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+{% endif %}
+
+
+<!-- Rest of the homepage content -->
+<!-- Packages, Albums, and Blog Posts -->
+<div class="container mt-5">
+    <!-- Tour Packages -->
+    <div class="row">
+        <h2>Tour Packages</h2>
+        {% for package in packages %}
+        <div class="col-md-4">
+            <h3>{{ package.title }}</h3>
+            <p>{{ package.description|truncatewords:30 }}</p>
+            <a href="{% url 'tour_package_detail' package.slug %}">Read More</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Photo Albums -->
+    <div class="row mt-5">
+        <h2>Photo Albums</h2>
+        {% for album in albums %}
+        <div class="col-md-4">
+            <h3>{{ album.title }}</h3>
+            <p>{{ album.description|truncatewords:30 }}</p>
+            <a href="{% url 'photo_album_detail' album.slug %}">View Album</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Blog Posts -->
+    <div class="row mt-5">
+        <h2>Blog Posts</h2>
+        {% for post in blog_posts %}
+        <div class="col-md-4">
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content|truncatewords:30 }}</p>
+            <a href="{% url 'blog_post_detail' post.slug %}">Read More</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+<!-- across/tour_package_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ package.title }}</title>
+</head>
+<body>
+    <h1>{{ package.title }}</h1>
+    <p>{{ package.description|safe }}</p>
+    <p><strong>Duration:</strong> {{ package.duration }}</p>
+    <p><strong>Price:</strong> ${{ package.price }}</p>
+</body>
+</html>
