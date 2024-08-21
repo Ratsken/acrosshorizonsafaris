@@ -7,13 +7,13 @@ def homepage_view(request):
     packages = TourPackage.objects.all()
     albums = PhotoAlbum.objects.all()
     blog_posts = BlogPost.objects.all()
-    homepage_banner = HomePageBanner.objects.first()  # Assuming a single banner
+    homepage_images = HomePageBanner.objects.all()  # Fetch all homepage images
 
     return render(request, 'across/homepage.html', {
         'packages': packages,
         'albums': albums,
         'blog_posts': blog_posts,
-        'homepage_banner': homepage_banner,
+        'homepage_images': homepage_images,  # Pass all images to the template
     })
 
 def blog_post_create_view(request):

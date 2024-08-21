@@ -4,77 +4,199 @@
 
 
 {% block body %}
-<!-- Banner Carousel -->
-{% if homepage_banner %}
-<div id="homepageBannerCarousel" class="carousel slide" data-bs-ride="carousel">
-    <!-- Carousel Indicators -->
-    <ol class="carousel-indicators">
-        {% for image in homepage_banner.images.all %}
-        <li data-bs-target="#homepageBannerCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
-        {% endfor %}
-    </ol>
-    <!-- Carousel Inner -->
-    <div class="carousel-inner">
-        {% for image in homepage_banner.images.all %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-            <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.alt_text }}">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>{{ homepage_banner.text|safe }}</h5>
+<!-- Carousel Start -->
+<div class="carousel-header">
+    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+            {% for image in homepage_images %}
+                <li data-bs-target="#carouselId" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}"></li>
+            {% endfor %}
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            {% for image in homepage_images %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ image.image.image.url }}" class="img-fluid" alt="{{ image.image.alt_text }}">
+                    <div class="carousel-caption">
+                        <div class="p-3" style="max-width: 900px;">
+                            {{ image.text|safe }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon btn bg-primary" aria-hidden="false"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+            <span class="carousel-control-next-icon btn bg-primary" aria-hidden="false"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+<!-- Carousel End -->
+
+
+
+<!-- Tour Packages Start -->
+<div class="container-fluid packages py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <h5 class="section-title px-3">Packages</h5>
+            <h1 class="mb-0">Awesome Packages</h1>
+        </div>
+        <div class="packages-carousel owl-carousel">
+            {% for package in packages %}
+            <div class="packages-item">
+                <div class="packages-img">
+                    <img src="{{ package.cover_image.url }}" class="img-fluid w-100 rounded-top" alt="{{ package.title }}">
+                    <div class="packages-info d-flex border border-start-0 border-end-0 position-absolute" style="width: 100%; bottom: 0; left: 0; z-index: 5;">
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt me-2"></i>{% for tag in package.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt me-2"></i>{{ package.duration }}</small>
+                        <small class="flex-fill text-center py-2"><i class="fa fa-dollar-sign me-2"></i>{{ package.price }}</small>
+                    </div>
+                    <div class="packages-price py-2 px-4">${{ package.price }}</div>
+                </div>
+                <div class="packages-content bg-light">
+                    <div class="p-4 pb-0">
+                        <h5 class="mb-0">{{ package.title }}</h5>
+                        <small class="text-uppercase">{{ package.category.name }}</small>
+                        <div class="mb-3">
+                            <!-- Rating (optional) -->
+                            {% for i in "12345" %}
+                            <small class="fa fa-star text-primary"></small>
+                            {% endfor %}
+                        </div>
+                        <p class="mb-4">{{ package.description|truncatewords:30 }}</p>
+                    </div>
+                    <div class="row bg-primary rounded-bottom mx-0">
+                        <div class="col-6 text-start px-0">
+                            <a href="{% url 'tour_package_detail' package.slug %}" class="btn-hover btn text-white py-2 px-4">Read More</a>
+                        </div>
+                        <div class="col-6 text-end px-0">
+                            <a href="#" class="btn-hover btn text-white py-2 px-4">Book Now</a>
+                        </div>
+                    </div>
+                </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
-    <!-- Carousel Controls -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#homepageBannerCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#homepageBannerCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
-{% endif %}
-
-
-<!-- Rest of the homepage content -->
-<!-- Packages, Albums, and Blog Posts -->
-<div class="container mt-5">
-    <!-- Tour Packages -->
-    <div class="row">
-        <h2>Tour Packages</h2>
-        {% for package in packages %}
-        <div class="col-md-4">
-            <h3>{{ package.title }}</h3>
-            <p>{{ package.description|truncatewords:30 }}</p>
-            <a href="{% url 'tour_package_detail' package.slug %}">Read More</a>
-        </div>
-        {% endfor %}
-    </div>
-
-    <!-- Photo Albums -->
-    <div class="row mt-5">
-        <h2>Photo Albums</h2>
-        {% for album in albums %}
-        <div class="col-md-4">
-            <h3>{{ album.title }}</h3>
-            <p>{{ album.description|truncatewords:30 }}</p>
-            <a href="{% url 'photo_album_detail' album.slug %}">View Album</a>
-        </div>
-        {% endfor %}
-    </div>
-
-    <!-- Blog Posts -->
-    <div class="row mt-5">
-        <h2>Blog Posts</h2>
-        {% for post in blog_posts %}
-        <div class="col-md-4">
-            <h3>{{ post.title }}</h3>
-            <p>{{ post.content|truncatewords:30 }}</p>
-            <a href="{% url 'blog_post_detail' post.slug %}">Read More</a>
-        </div>
-        {% endfor %}
     </div>
 </div>
+<!-- Tour Packages End -->
+
+
+<!-- Gallery Start -->
+<div class="container-fluid gallery py-5 my-5">
+    <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+        <h5 class="section-title px-3">Our Gallery</h5>
+        <h1 class="mb-4">Tourism & Traveling Gallery</h1>
+        <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum tempore nam, architecto doloremque velit explicabo? Voluptate sunt eveniet fuga eligendi! Expedita laudantium fugiat corrupti eum cum repellat a laborum quasi.</p>
+    </div>
+    <div class="tab-class text-center">
+        <ul class="nav nav-pills d-inline-flex justify-content-center mb-5">
+            <li class="nav-item">
+                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill active" data-bs-toggle="pill" href="#GalleryTab-1">
+                    <span class="text-dark" style="width: 150px;">All</span>
+                </a>
+            </li>
+            {% for category in categories %}
+            <li class="nav-item">
+                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#GalleryTab-{{ forloop.counter }}">
+                    <span class="text-dark" style="width: 150px;">{{ category.name }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            <div id="GalleryTab-1" class="tab-pane fade show p-0 active">
+                <div class="row g-2">
+                    {% for album in photo_albums %}
+                    {% for photo in album.images.all %}
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                        <div class="gallery-item h-100">
+                            <img src="{{ photo.image.url }}" class="img-fluid w-100 h-100 rounded" alt="{{ photo.title }}">
+                            <div class="gallery-content">
+                                <div class="gallery-info">
+                                    <h5 class="text-white text-uppercase mb-2">{{ album.title }}</h5>
+                                    <a href="{% url 'photo_album_detail' album.id %}" class="btn-hover text-white">View All Photos <i class="fa fa-arrow-right ms-2"></i></a>
+                                </div>
+                            </div>
+                            <div class="gallery-plus-icon">
+                                <a href="{{ photo.image.url }}" data-lightbox="gallery-{{ album.id }}" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% for category in categories %}
+            <div id="GalleryTab-{{ forloop.counter }}" class="tab-pane fade show p-0">
+                <div class="row g-2">
+                    {% for album in category.photos.all %}
+                    {% for photo in album.images.all %}
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                        <div class="gallery-item h-100">
+                            <img src="{{ photo.image.url }}" class="img-fluid w-100 h-100 rounded" alt="{{ photo.title }}">
+                            <div class="gallery-content">
+                                <div class="gallery-info">
+                                    <h5 class="text-white text-uppercase mb-2">{{ album.title }}</h5>
+                                    <a href="{% url 'photo_album_detail' album.id %}" class="btn-hover text-white">View All Photos <i class="fa fa-arrow-right ms-2"></i></a>
+                                </div>
+                            </div>
+                            <div class="gallery-plus-icon">
+                                <a href="{{ photo.image.url }}" data-lightbox="gallery-{{ album.id }}" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Gallery End -->
+
+<!-- Blog Start -->
+<div class="container-fluid blog py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <h5 class="section-title px-3">Our Blog</h5>
+            <h1 class="mb-4">Explore the Best of Kenyan Safaris</h1>
+            <p class="mb-0">Discover the heart of Africa through our expertly curated blog posts that delve into the majestic beauty of Kenyan safaris, the thrill of adventure, and the cultural richness that awaits every traveler. Whether you're planning your first safari or looking for new places to explore, our blog is your ultimate guide to experiencing Kenya's wild and wonderful landscapes.</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {% for post in blog_posts %}
+            <div class="col-lg-4 col-md-6">
+                <div class="blog-item">
+                    <div class="blog-img">
+                        <div class="blog-img-inner">
+                            <img class="img-fluid w-100 rounded-top" src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                            <div class="blog-icon">
+                                <a href="{% url 'blog_post_detail' post.slug %}" class="my-auto"><i class="fas fa-link fa-2x text-white"></i></a>
+                            </div>
+                        </div>
+                        <div class="blog-info d-flex align-items-center border border-start-0 border-end-0">
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>{{ post.date|date:"d M Y" }}</small>
+                            <a href="{% url 'blog_post_detail' post.slug %}" class="btn-hover flex-fill text-center text-white border-end py-2"><i class="fa fa-thumbs-up text-primary me-2"></i>1.7K</a>
+                            <a href="{% url 'blog_post_detail' post.slug %}#comments" class="btn-hover flex-fill text-center text-white py-2"><i class="fa fa-comments text-primary me-2"></i>1K</a>
+                        </div>
+                    </div>
+                    <div class="blog-content border border-top-0 rounded-bottom p-4">
+                        <p class="mb-3">Posted By: Admin</p>
+                        <a href="{% url 'blog_post_detail' post.slug %}" class="h4">{{ post.title }}</a>
+                        <p class="my-3">{{ post.content|truncatewords:20 }}</p>
+                        <a href="{% url 'blog_post_detail' post.slug %}" class="btn btn-primary rounded-pill py-2 px-4">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Blog End -->
 
 {% endblock %}

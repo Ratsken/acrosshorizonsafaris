@@ -28,6 +28,7 @@ class VideoAlbum(SEOModel):
     title = models.CharField(max_length=200)
     description = RichTextField()
     videos = models.ManyToManyField('Video', related_name='video_albums')
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='videos', null=True, blank=True)
     tags = models.ManyToManyField('Tag', related_name='video_albums')
 
     def __str__(self):
@@ -36,6 +37,7 @@ class VideoAlbum(SEOModel):
 class PhotoAlbum(SEOModel):
     title = models.CharField(max_length=200)
     description = RichTextField()
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='photos', null=True, blank=True)
     images = models.ManyToManyField('Photo', related_name='photo_albums')
     tags = models.ManyToManyField('Tag', related_name='photo_albums')
 
@@ -43,7 +45,7 @@ class PhotoAlbum(SEOModel):
         return self.title
 
 class HomePageBanner(SEOModel):
-    images = models.ManyToManyField('Photo', related_name='photo_banner')
+    image = models.ForeignKey('Photo', related_name='photo_banner', on_delete=models.CASCADE)
     text = RichTextField(blank=True)
 
     def __str__(self):
