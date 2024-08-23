@@ -6,11 +6,15 @@
 
     <head>
         <meta charset="utf-8">
-        <title>Travela - Tourism Website Template</title>
+        <title>{{ object.meta_title|default:"Across Horizon Safaris - Discover the Heart of Africa" }}</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="" name="keywords">
-        <meta content="" name="description">
-
+        <meta content="{{ object.meta_description|default:'' }}" name="description">
+        {% comment %} <meta content="{{ object.og_title|default:object.meta_title|default:'' }}" name="og:title">
+        <meta content="{{ object.og_description|default:object.meta_description|default:'' }}" name="og:description"> {% endcomment %}
+        
+        <!-- Favicon -->
+        <link rel="icon" href="{% static 'img/logo100x100.jpg' %}" type="image/jpg">
+        
         <!-- Google Web Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
