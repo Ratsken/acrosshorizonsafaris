@@ -1,10 +1,16 @@
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 from .models import (
     BlogPost, Contact, TourPackage, Booking, Tag, Photo, Video,
     PhotoAlbum, VideoAlbum, Category, HomePageBanner
 )
 from ckeditor.widgets import CKEditorWidget
 from django import forms
+from .resources import (
+    BlogPostResource, ContactResource, TourPackageResource, BookingResource, 
+    TagResource, PhotoResource, VideoResource, PhotoAlbumResource, 
+    VideoAlbumResource, CategoryResource, HomePageBannerResource
+)
 
 # Custom Admin Form for CKEditor integration
 class BlogPostAdminForm(forms.ModelForm):
@@ -36,58 +42,66 @@ class BookingInline(admin.StackedInline):
     model = Booking
     extra = 1
 
-# Since Photo and Video do not have ForeignKey relationships to their albums, remove the inlines from album admins
-# If you want to display them in some way, you would need to add custom logic
-
-# Admin classes
-class BlogPostAdmin(admin.ModelAdmin):
+# Admin classes with ImportExportModelAdmin
+class BlogPostAdmin(ImportExportModelAdmin):
     form = BlogPostAdminForm
+    resource_class = BlogPostResource
     list_display = ('title', 'meta_title', 'meta_description', 'slug')
     search_fields = ('title', 'content')
     prepopulated_fields = {'slug': ('title',)}
 
-class ContactAdmin(admin.ModelAdmin):
+class ContactAdmin(ImportExportModelAdmin):
+    resource_class = ContactResource
     list_display = ('name', 'email', 'message')
     search_fields = ('name', 'email')
 
-class TourPackageAdmin(admin.ModelAdmin):
+class TourPackageAdmin(ImportExportModelAdmin):
     form = TourPackageAdminForm
+    resource_class = TourPackageResource
     list_display = ('title', 'price', 'category', 'duration')
     list_filter = ('category', 'tags')
     search_fields = ('title', 'description')
     prepopulated_fields = {'slug': ('title',)}
 
-class BookingAdmin(admin.ModelAdmin):
+class BookingAdmin(ImportExportModelAdmin):
+    resource_class = BookingResource
     list_display = ('package', 'full_name', 'email', 'date')
     list_filter = ('date', 'package')
     search_fields = ('full_name', 'email')
 
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(ImportExportModelAdmin):
+    resource_class = TagResource
     list_display = ('name',)
     search_fields = ('name',)
 
-class PhotoAdmin(admin.ModelAdmin):
+class PhotoAdmin(ImportExportModelAdmin):
+    resource_class = PhotoResource
     list_display = ('alt_text', 'image')
     search_fields = ('alt_text',)
 
-class VideoAdmin(admin.ModelAdmin):
+class VideoAdmin(ImportExportModelAdmin):
+    resource_class = VideoResource
     list_display = ('alt_text', 'video')
     search_fields = ('alt_text',)
 
-class PhotoAlbumAdmin(admin.ModelAdmin):
+class PhotoAlbumAdmin(ImportExportModelAdmin):
+    resource_class = PhotoAlbumResource
     list_display = ('title', 'description')
     search_fields = ('title', 'description')
 
-class VideoAlbumAdmin(admin.ModelAdmin):
+class VideoAlbumAdmin(ImportExportModelAdmin):
+    resource_class = VideoAlbumResource
     list_display = ('title', 'description')
     search_fields = ('title', 'description')
 
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(ImportExportModelAdmin):
+    resource_class = CategoryResource
     list_display = ('name', 'slug')
     search_fields = ('name',)
 
-class HomePageBannerAdmin(admin.ModelAdmin):
+class HomePageBannerAdmin(ImportExportModelAdmin):
     form = HomePageBannerAdminForm
+    resource_class = HomePageBannerResource
     list_display = ('meta_title',)
     search_fields = ('meta_title', 'text')
 

@@ -1,27 +1,43 @@
 {% extends "layout.html" %}
 {% load static %}
 {% load allauth i18n %}
+{% load crispy_forms_tags %}
+
 {% block head_title %}
     {% trans "Sign Out" %}
 {% endblock head_title %}
 
 {% block body %}
-    {% element h1 %}
-        {% trans "Sign Out" %}
-    {% endelement %}
-    {% element p %}
-        {% trans 'Are you sure you want to sign out?' %}
-    {% endelement %}
-    {% url 'account_logout' as action_url %}
-    {% element form method="post" action=action_url no_visible_fields=True %}
-        {% slot body %}
-            {% csrf_token %}
-            {{ redirect_field }}
-        {% endslot %}
-        {% slot actions %}
-            {% element button type="submit" %}
-                {% trans 'Sign Out' %}
-            {% endelement %}
-        {% endslot %}
-    {% endelement %}
-{% endblock %}
+<div class="container-fluid">
+    <!-- Banner Start -->
+    <div class="row">
+        <div class="col-12">
+            <div style="height: 150px; background-color: #f8f9fa;"></div>
+        </div>
+    </div>
+    <!-- Banner End -->
+
+    <!-- Sign Out Form Start -->
+    <div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 150px);">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <h1 class="mb-4">{% trans "Sign Out" %}</h1>
+                    <p class="mb-4">
+                        {% trans 'Are you sure you want to sign out?' %}
+                    </p>
+                    {% url 'account_logout' as action_url %}
+                    <form method="post" action="{{ action_url }}" tags="exit,logout">
+                        {% csrf_token %}
+                        {{ redirect_field }}
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger">{% trans 'Sign Out' %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sign Out Form End -->
+</div>
+{% endblock body %}
